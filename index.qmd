@@ -57,10 +57,11 @@ knitr::knit_hooks$set(
 )
 ```
 
+prueba pull git
+
 # Motivation
 
-This document contains code chunks to help you understanding the course.
-Don't hesitate to modify them, add your own notes and code.
+This document contains code chunks to help you understanding the course. Don't hesitate to modify them, add your own notes and code.
 
 It comes with a practical you will run at home (`Biodiv-Practical.Rmd`).
 
@@ -79,17 +80,21 @@ BCI_50ha_abd <- colSums(BCI)
 BCI_50ha_abd %>% 
   log10() %>% 
   hist(breaks = 15, main = "Preston diagram")
+sum(BCI) # total number of trees
+sum(BCI)/50 #number of trees per hectare
+head(BCI_50ha_abd)
 ```
 
 Probability densities
 
 ```{r}
 BCI_50ha_abd %>% 
-  tibble(abundance = .) %>% 
+  tibble(abundance = .) %>% #make a dataframe
   ggplot() +
   # Bounded density
-  geom_density(aes(x = abundance), bounds = c(0, Inf)) +
+  geom_density(aes(x = abundance), bounds = c(0, Inf)) + #bounds, no possible values below 0)
   scale_x_log10()
+# in the graph, it explains the abundance of species, so the moda will be around 50 but we have a problem as is not a gaussian distribution  
 ```
 
 ### Whittaker diagram
@@ -99,7 +104,8 @@ library("divent")
 BCI_50ha_abd %>% 
   # Declare it is an "abundances" object
   as_abundances() %>% 
-  autoplot()
+  autoplot() #this is a ggplot, 
+#whittaker plot, you have everything, it is a good step to strat analyzing the data
 ```
 
 ## Broken stick
@@ -108,12 +114,28 @@ Random distributions are created by `divent::rxxx()`functions.
 
 ```{r}
 rcommunity(
-  # One community
+  # One community #Rcommunity, random communities of individuals, is not random is the spected distribution 
   1,
   # Number of trees
   size = 10000,
   # Number of species
   species_number = 300,
+  # Distribution
+  distribution = "bstick"
+) %>% 
+  # Whittaker plot
+  autoplot()
+```
+
+```{r}
+
+rcommunity(
+  # One community #Rcommunity, random communities of individuals, is not random is the spected distribution 
+  1,
+  # Number of trees
+  size = 100,
+  # Number of species
+  species_number = 30,
   # Distribution
   distribution = "bstick"
 ) %>% 
@@ -135,7 +157,7 @@ rcommunity(
   species_number = 300,
   # Distribution
   distribution = "geom",
-  prob_geom = 0.1
+  prob_geom = 0.1 #parameter k, 
 ) %>% 
   # Whittaker plot
   autoplot()
@@ -165,9 +187,35 @@ Modify the standard deviation.
 
 ## Log-series
 
+The gamma function
+
+```{r}
+ggplot() +
+  geom_function(
+    fun = dgamma, 
+    args = list(shape = 0.9),
+    xlim = c(0, 10)
+  )
+
+```
+
+Norm function
+
+```{r}
+ggplot() +
+  geom_function(
+    fun = dnorm, 
+    args = list(mean = 5),
+    xlim = c(0, 10)
+  )
+
+```
+
 Random distribution.
 
 ```{r}
+library("tidyverse")
+library("diven")
 rcommunity(
   # One community
   1,
@@ -224,6 +272,18 @@ comm_large_lnorm %>%
 autoplot(comm_lnorm, fit_rac = TRUE, distribution = "lnorm")
 # Estimate the parameters
 fit_rac(comm_lnorm, distribution = "lnorm") 
+
+```
+
+Fit BCI
+
+```{r}
+BCI_50ha_abd %>%
+  as_abundances()%>%
+  autoplot(fit_rac = TRUE, distribution = "lnorm")
+
+
+
 ```
 
 ## Zero-sum multinomial distribution
@@ -263,8 +323,7 @@ BCI_50ha %>%
   BCI_params
 ```
 
-The distribution of the local community is derived.
-$J$ is that of BCI and $m$ was estimated previously.
+The distribution of the local community is derived. $J$ is that of BCI and $m$ was estimated previously.
 
 ```{r}
 #| label: bci_sim_code
@@ -332,13 +391,12 @@ arrange(desc(abundance))
 
 ## Accumulation of subplots
 
-Accumulate subplots in random order (Monte-Carlo).
-Plot the expectation and the confidence interval of the number of species with respect to the number of samples.
+Accumulate subplots in random order (Monte-Carlo). Plot the expectation and the confidence interval of the number of species with respect to the number of samples.
 
 ```{r}
 BCI %>% 
   specaccum() %>% 
-  plot()
+  plot() #read documentation, do not use it because it use ..
 ```
 
 ## Accumulation curve
@@ -664,8 +722,7 @@ profile_hill(p6_abundances, orders = q_seq_0_4) %>%
 
 ## Standardized diversity
 
-The sampling effort is very different: 50 ha in BCI, 6.25 ha in Paracou.
-The asymptotic estimation is less reliable in Paracou.
+The sampling effort is very different: 50 ha in BCI, 6.25 ha in Paracou. The asymptotic estimation is less reliable in Paracou.
 
 Compare diversity at the same sampling effort, say 10 ha.
 
@@ -733,8 +790,7 @@ Rao.
 ent_rao(mock_3sp_abundances, tree = mock_3sp_tree, estimator = "naive")
 ```
 
-The tree is normalized to height = 1 by default.
-Without normalization:
+The tree is normalized to height = 1 by default. Without normalization:
 
 ```{r}
 ent_rao(
@@ -762,8 +818,7 @@ ent_rao(p6_abundances, tree = paracou_6_taxo) %>%
   )
 ```
 
-Rao's entropy is not an effective number of species, but the average phylogenetic distance between two individuals.
-The corresponding Hill number is:
+Rao's entropy is not an effective number of species, but the average phylogenetic distance between two individuals. The corresponding Hill number is:
 
 ```{r}
 div_phylo(p6_abundances, tree = paracou_6_taxo, q = 2)
@@ -780,9 +835,7 @@ profile_phylo(p6_abundances, tree = paracou_6_taxo) %>%
 
 ## Mock data
 
-The same mock data is used.
-Distances between species is now assumed to be in the trait space.
-Distances between species.
+The same mock data is used. Distances between species is now assumed to be in the trait space. Distances between species.
 
 ```{r}
 mock_3sp_dist
@@ -844,9 +897,7 @@ ent_similarity(
 
 ## Paracou 6
 
-The species traits are maximum height (95^th^ percentile) and seed mass, maximum height (95^th^ percentile) and seed mass.
-A distance matrix was built (see home practical).
-Distribution of distances between species.
+The species traits are maximum height (95^th^ percentile) and seed mass, maximum height (95^th^ percentile) and seed mass. A distance matrix was built (see home practical). Distribution of distances between species.
 
 ```{r}
 paracou_6_fundist %>% 
@@ -898,8 +949,7 @@ mock_3sp_ind %>%
   coord_fixed()
 ```
 
-Diversity of the 6 individuals.
-First, without variability.
+Diversity of the 6 individuals. First, without variability.
 
 ```{r}
 # Choose variability
