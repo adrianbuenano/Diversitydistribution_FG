@@ -61,7 +61,8 @@ prueba pull git
 
 # Motivation
 
-This document contains code chunks to help you understanding the course. Don't hesitate to modify them, add your own notes and code.
+This document contains code chunks to help you understanding the course.
+Don't hesitate to modify them, add your own notes and code.
 
 It comes with a practical you will run at home (`Biodiv-Practical.Rmd`).
 
@@ -215,7 +216,7 @@ Random distribution.
 
 ```{r}
 library("tidyverse")
-library("diven")
+library("divent")
 rcommunity(
   # One community
   1,
@@ -323,7 +324,8 @@ BCI_50ha %>%
   BCI_params
 ```
 
-The distribution of the local community is derived. $J$ is that of BCI and $m$ was estimated previously.
+The distribution of the local community is derived.
+$J$ is that of BCI and $m$ was estimated previously.
 
 ```{r}
 #| label: bci_sim_code
@@ -391,7 +393,8 @@ arrange(desc(abundance))
 
 ## Accumulation of subplots
 
-Accumulate subplots in random order (Monte-Carlo). Plot the expectation and the confidence interval of the number of species with respect to the number of samples.
+Accumulate subplots in random order (Monte-Carlo).
+Plot the expectation and the confidence interval of the number of species with respect to the number of samples.
 
 ```{r}
 BCI %>% 
@@ -561,8 +564,6 @@ ggplot() +
   labs(x = "Probability", y = "Information")
 ```
 
-Information brought by a species: $p_s \ln(1 / p_s)$.
-
 ```{r}
 ggplot() +
   geom_function(fun = \(p) {p * log(1 / p)}, n = 1001) +
@@ -722,7 +723,8 @@ profile_hill(p6_abundances, orders = q_seq_0_4) %>%
 
 ## Standardized diversity
 
-The sampling effort is very different: 50 ha in BCI, 6.25 ha in Paracou. The asymptotic estimation is less reliable in Paracou.
+The sampling effort is very different: 50 ha in BCI, 6.25 ha in Paracou.
+The asymptotic estimation is less reliable in Paracou.
 
 Compare diversity at the same sampling effort, say 10 ha.
 
@@ -790,7 +792,8 @@ Rao.
 ent_rao(mock_3sp_abundances, tree = mock_3sp_tree, estimator = "naive")
 ```
 
-The tree is normalized to height = 1 by default. Without normalization:
+The tree is normalized to height = 1 by default.
+Without normalization:
 
 ```{r}
 ent_rao(
@@ -818,7 +821,8 @@ ent_rao(p6_abundances, tree = paracou_6_taxo) %>%
   )
 ```
 
-Rao's entropy is not an effective number of species, but the average phylogenetic distance between two individuals. The corresponding Hill number is:
+Rao's entropy is not an effective number of species, but the average phylogenetic distance between two individuals.
+The corresponding Hill number is:
 
 ```{r}
 div_phylo(p6_abundances, tree = paracou_6_taxo, q = 2)
@@ -835,7 +839,9 @@ profile_phylo(p6_abundances, tree = paracou_6_taxo) %>%
 
 ## Mock data
 
-The same mock data is used. Distances between species is now assumed to be in the trait space. Distances between species.
+The same mock data is used.
+Distances between species is now assumed to be in the trait space.
+Distances between species.
 
 ```{r}
 mock_3sp_dist
@@ -897,7 +903,9 @@ ent_similarity(
 
 ## Paracou 6
 
-The species traits are maximum height (95^th^ percentile) and seed mass, maximum height (95^th^ percentile) and seed mass. A distance matrix was built (see home practical). Distribution of distances between species.
+The species traits are maximum height (95^th^ percentile) and seed mass, maximum height (95^th^ percentile) and seed mass.
+A distance matrix was built (see home practical).
+Distribution of distances between species.
 
 ```{r}
 paracou_6_fundist %>% 
@@ -949,7 +957,8 @@ mock_3sp_ind %>%
   coord_fixed()
 ```
 
-Diversity of the 6 individuals. First, without variability.
+Diversity of the 6 individuals.
+First, without variability.
 
 ```{r}
 # Choose variability
@@ -993,9 +1002,9 @@ Three habitats: A, B, C.
 ```{r}
 matrix(
   c(
-    0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 0, 1, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 1, 1, 1
+    0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
+    3, 3, 3, 3, 3, 3, 0, 3, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 3, 3, 3
   ),
   nrow = 3, 
   byrow = TRUE
@@ -1011,14 +1020,14 @@ matrix(
 Richness.
 
 ```{r}
-div_richness(mock_island_abd, estimator = "naive")
-div_richness(mock_island_abd, gamma = TRUE, estimator = "naive")
+div_richness(mock_island_abd)
+div_richness(mock_island_abd, gamma = TRUE )
 ```
 
 Multiplicative partitioning: 10 effective species ($\gamma$) = 5 effective species per habitat ($\alpha$) times 2 habitats ($\beta$).
 
 ```{r}
-div_part(mock_island_abd, q = 0, estimator = "naive")
+div_part(mock_island_abd, q = 0)
 ```
 
 Additive partitioning: 10 effective species ($\gamma$) = 5 effective species per habitat ($\alpha$) + 5 more species ($\beta$).
